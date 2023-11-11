@@ -1,0 +1,40 @@
+kubectl get ns
+
+kubectl get pods -n nginx-ingress
+
+kubectl get ingressClass
+
+kubectl get pods -n nginx-ingress -w
+
+kubectl get svc -n nginx-ingress
+
+kubectl create -f service/nodeport.yaml
+
+sudo vim /etc/hosts
+
+            sesame.devops.com
+
+
+vim angular-ingress.yml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: devops  
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: sesame.devops.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:                
+                name: angular-app-service
+                port:
+                  number: 80
+
+kubectl apply -f angular-ingress.yml
